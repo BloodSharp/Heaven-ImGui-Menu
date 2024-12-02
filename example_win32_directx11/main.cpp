@@ -1,11 +1,11 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
+#include "../backends/imgui_impl_win32.h"
+#include "../backends/imgui_impl_dx11.h"
 
-#include "imgui_edited.hpp"
+#include "../imgui_edited.hpp"
 
-#include "imgui_freetype.h"
+#include "../imgui_freetype.h"
 #include <d3d11.h>
 #include <tchar.h>
 
@@ -15,17 +15,17 @@
 #include <vector>
 #include <string>
 
-#include <imgui.h>
+#include "../imgui.h"
 #include <vector>
 #include <string>
 #include <chrono>
 #include <algorithm>
 
-#include <SDK/Include/D3DX11tex.h>
-#pragma comment(lib, "D3DX11.lib")
+//#include <SDK/Include/D3DX11tex.h>
+//#pragma comment(lib, "D3DX11.lib")
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "D3DCompiler.lib")
+//#pragma comment(lib, "d3d11.lib")
+//#pragma comment(lib, "D3DCompiler.lib")
 
 static ID3D11Device*            g_pd3dDevice = nullptr;
 static ID3D11DeviceContext*     g_pd3dDeviceContext = nullptr;
@@ -448,7 +448,27 @@ namespace render_ui
                     ImGui::GetWindowDrawList()->AddText(pos + ImVec2(15, 15), ImGui::GetColorU32(c::elements::text_active), "ESP PREVIEW");
 
                     ImGui::SetCursorPosY(55);
-                    edited::esp_preview(texture::esp_preview, &esp_preview::hp, esp_preview::hp_color, &esp_preview::box, esp_preview::box_color, &esp_preview::HP_line, esp_preview::hp_line_color);
+                    edited::esp_preview(texture::esp_preview,
+                        &esp_preview::nickname,
+                        esp_preview::nick_color,
+                        &esp_preview::weapon,
+                        esp_preview::weapon_color,
+                        &esp_preview::hp,
+                        esp_preview::hp_color,
+                        &esp_preview::zoom,
+                        esp_preview::zoom_color,
+                        &esp_preview::bomb,
+                        esp_preview::bomb_color,
+                        &esp_preview::c4,
+                        esp_preview::c4_color,
+                        &esp_preview::money,
+                        esp_preview::money_color,
+                        &esp_preview::hit,
+                        esp_preview::hit_color,
+                        &esp_preview::box,
+                        esp_preview::box_color,
+                        &esp_preview::HP_line,
+                        esp_preview::hp_line_color);
 
                     ImGui::SetCursorPos(ImVec2(20, 415));
                     ImGui::BeginGroup();
@@ -518,7 +538,7 @@ namespace render_ui
                 for (int i = 0; i < sub_tab_columns[0].size(); ++i)
                 {
              
-                    if (edited::SubTab(page_s == i, sub_tab_columns[0][i].c_str(), ImVec2(40, 40)))
+                    if (edited::Tab(page_s == i, sub_tab_columns[0][i].c_str(), ImVec2(40, 40)))
                     {
                         page_s = i;
                     }
@@ -568,8 +588,8 @@ namespace render_ui
         style->WindowBorderSize = 0;
         style->ScrollbarSize = 8.f;
 
-        ImGui::SetNextWindowSize(c::background::size);
-        ImGui::Begin("Dear ImGui", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground);
+        ImGui::SetNextWindowSize(c::background::size, ImGuiCond_Once);
+        ImGui::Begin("Dear ImGui", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground);
         {
             Decoration();
             Particles();
@@ -592,7 +612,7 @@ int main(int, char**)
 {
     WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX11 Example", WS_POPUP, 0, 0, 1920, 1080, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX11 Example", WS_OVERLAPPEDWINDOW, 0, 0, 1280, 960, nullptr, nullptr, wc.hInstance, nullptr);
 
     if (!CreateDeviceD3D(hwnd))
     {
@@ -624,13 +644,13 @@ int main(int, char**)
     font::icomoon_widget2 = io.Fonts->AddFontFromMemoryTTF(icomoon, sizeof(icomoon), 16.f, &cfg, io.Fonts->GetGlyphRangesCyrillic());
 
     //Byte
-    D3DX11_IMAGE_LOAD_INFO info; ID3DX11ThreadPump* pump{ nullptr };
+    //D3DX11_IMAGE_LOAD_INFO info; ID3DX11ThreadPump* pump{ nullptr };
  
     if (texture::foto == nullptr)
-        D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, foto_type, sizeof(foto_type), &info, pump, &texture::foto, 0);
+        ;// D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, foto_type, sizeof(foto_type), &info, pump, &texture::foto, 0);
 
-    if (texture::esp_preview == nullptr) 
-        D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, esp_preview1, sizeof(esp_preview1), &info, pump, &texture::esp_preview, 0);
+    if (texture::esp_preview == nullptr)
+        ;// D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, esp_preview1, sizeof(esp_preview1), &info, pump, &texture::esp_preview, 0);
 
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
